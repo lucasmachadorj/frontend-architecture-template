@@ -15,6 +15,7 @@ export class Router {
   }
 
   constructor() {
+    this.updateCurrentRoute = this.updateCurrentRoute.bind(this);
     makeObservable(this, {
       currentRoute: computed,
       updateCurrentRoute: action,
@@ -28,6 +29,8 @@ export class Router {
   }: UpdateCurrentRouteParams) {
     const oldRoute = this.routerRepository.findRoute(this.currentRoute.routeId);
     const newRoute = this.routerRepository.findRoute(newRouteId);
+    console.log("oldRoute", oldRoute);
+    console.log("newRoute", newRoute);
     const routeChanged = oldRoute.routeId !== newRoute.routeId;
     // verify if has token
     const hasToken = false;

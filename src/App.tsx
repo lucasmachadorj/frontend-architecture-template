@@ -18,7 +18,6 @@ export const AppComp = observer(({ controller }: Props) => {
   return (
     <>
       {renderedComponents().map((route) => {
-        console.log("route", route, controller.currentRoute.routeId);
         return controller.currentRoute.routeId === route.id && route.component;
       })}
     </>
