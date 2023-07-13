@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { NavigateParams, RouterGateway } from "./router.gateway";
 import { makeObservable, observable } from "mobx";
 import { Route, RouteDef, RouteId, getRoutes } from "./routes";
+import { RouteConfig } from "./router.domain";
 
 export type GenericFunction = (...args: any[]) => void;
 
@@ -16,6 +17,7 @@ export type UpdateCurrentRouteParams = {
   routeId: RouteId;
   params: any;
   query: any;
+  state: unknown;
 };
 
 export type RegisterRoutesParams = {
@@ -46,17 +48,19 @@ export class RouterRepository {
 
   registerRoutes({ updateCurrentRoute, onRouteChanged }: RegisterRoutesParams) {
     this.onRouteChanged = onRouteChanged;
-    let routeConfig: Record<string, any> = {};
+    let routeConfig: RouteConfig = {};
     const routes = getRoutes();
+
     routes.forEach((routeArg: Route) => {
       const route = this.findRoute(routeArg.routeId);
       routeConfig[route.routeDef.path] = {
         as: route.routeId,
-        uses: (match: any) => {
+        uses: (state: any, queryString: string) => {
           updateCurrentRoute({
             routeId: route.routeId,
             params: route.routeDef,
-            query: match.queryString,
+            query: queryString,
+            state: state,
           });
           if (this.onRouteChanged) {
             this.onRouteChanged();
@@ -64,6 +68,8 @@ export class RouterRepository {
         },
       };
     });
+
+    this.routerGateway.registerRoutes(routeConfig);
   }
 
   findRoute(routeId: string): Route {

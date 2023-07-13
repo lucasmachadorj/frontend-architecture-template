@@ -1,4 +1,6 @@
 import { injectable } from "inversify";
+import { RouteConfig } from "./router.domain";
+import { BrowserNavigator } from "./navigator.service";
 
 export type NavigateParams = {
   routeId: string;
@@ -8,7 +10,21 @@ export type NavigateParams = {
 
 @injectable()
 export class RouterGateway {
-  async registerRoutes(routeConfig: any) {}
+  private navigator: BrowserNavigator | null = null;
 
-  goToId = ({ routeId, params, query }: NavigateParams) => {};
+  async registerRoutes(routeConfig: RouteConfig) {
+    if (!this.navigator) {
+      this.navigator = BrowserNavigator.create("/");
+    }
+
+    this.navigator.on(routeConfig);
+  }
+
+  goToId = ({ routeId, params, query }: NavigateParams) => {
+    if (!this.navigator) {
+      throw new Error("Navigator not initialized");
+    }
+
+    this.navigator.goToId({ routeId, query, params });
+  };
 }
