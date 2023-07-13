@@ -17,14 +17,16 @@ export class RouterGateway {
       this.navigator = BrowserNavigator.create("/");
     }
 
-    this.navigator.on(routeConfig);
+    this.navigator.on(routeConfig).notFound((path, state) => {
+      console.log("Not found", path, state);
+    });
   }
 
-  goToId = ({ routeId, params, query }: NavigateParams) => {
+  goTo = ({ routeId, params, query }: NavigateParams) => {
     if (!this.navigator) {
       throw new Error("Navigator not initialized");
     }
 
-    this.navigator.goToId({ routeId, query, params });
+    this.navigator.goTo({ routeId, query, params });
   };
 }

@@ -43,7 +43,7 @@ export class Router {
       this.routerRepository.onRouteChanged();
 
       if (protectedOrUnauthenticatedRoute) {
-        this.routerRepository.goToId({ routeId: "loginLink" });
+        this.routerRepository.goTo({ routeId: "loginLink" });
         return;
       }
 

@@ -91,7 +91,7 @@ export class RouterRepository {
     };
   }
 
-  goToId = async ({ routeId, params, query }: NavigateParams) => {
-    this.routerGateway.goToId({ routeId, params, query });
+  goTo = async ({ routeId, params, query }: NavigateParams) => {
+    this.routerGateway.goTo({ routeId, params, query });
   };
 }

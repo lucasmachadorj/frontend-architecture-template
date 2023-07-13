@@ -4,7 +4,7 @@ export type State<T = any> = {
 };
 
 export type RouteConfig = {
-  [key: string]: {
+  [path: string]: {
     as: string;
     uses: (state: any, queryString: string) => void;
   };

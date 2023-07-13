@@ -3,7 +3,7 @@ import { NavigateParams } from "./router.gateway";
 
 export interface Navigator {
   on(routeConfig: RouteConfig): void;
-  goToId({ routeId, params, query }: NavigateParams): void;
+  goTo({ routeId, params, query }: NavigateParams): void;
   replace(path: string, state?: unknown): void;
   goBack(): void;
   goForward(): void;
@@ -69,8 +69,20 @@ export class BrowserNavigator implements Navigator {
     return this;
   }
 
-  goToId({ routeId, params, query }: NavigateParams) {
-    const route = this.routeConfig[routeId];
+  goTo({ routeId, params, query }: NavigateParams) {
+    Object.keys(this.routeConfig).forEach((path) => {
+      if (this.routeConfig[path].as === routeId) {
+        this.navigate(path, query, params);
+        return;
+      }
+    });
+
+    if (this.notFoundHandler) {
+      this.notFoundHandler(routeId, undefined);
+      return;
+    }
+
+    this.navigate("/");
   }
 
   private handlePopState(event: PopStateEvent) {
