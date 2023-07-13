@@ -1,7 +1,7 @@
 export type RouteConfig = {
   [path: string]: {
     as: string;
-    uses: (queryString: string) => void;
+    uses: () => void;
   };
 };
 

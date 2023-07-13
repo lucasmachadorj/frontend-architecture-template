@@ -14,28 +14,27 @@ export class BrowserNavigator implements Navigator {
   private history: History;
   private routeConfig: RouteConfig = {};
 
-  private constructor() {
+  constructor() {
     this.history = window.history;
     window.onpopstate = this.handlePopState.bind(this);
   }
 
-  static create() {
-    return new BrowserNavigator();
-  }
 
-  navigate(path: string, query?: QueryParams, params?: PathParams) {
-    const search = query ? `?${this.toSearchString(query)}` : "";
+
+  navigate(path: string, params?: PathParams) {
     const resolvedPath = params ? this.toPathString(params, path) : path;
 
     const route = this.routeConfig[path];
+
+    console.log(path)
 
     if (!route && path === "/") {
       throw new Error("Root route not found");
     }
 
     if (route) {
-      route.uses(search);
-      this.history.pushState(undefined, "", resolvedPath + search);
+      route.uses();
+      this.history.pushState(undefined, "", resolvedPath);
 
       return;
     }
@@ -79,7 +78,7 @@ export class BrowserNavigator implements Navigator {
 
     if(!route) return;
 
-    route.uses(event.state.search);
+    route.uses();
   }
 
   private toSearchString = (params: QueryParams): string => {

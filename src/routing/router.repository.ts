@@ -9,7 +9,7 @@ export type GenericFunction = (...args: any[]) => void;
 export type CurrentRoute = {
   routeId: RouteId;
   routeDef: RouteDef;
-  params: any;
+  params?: any;
 };
 
 export type UpdateCurrentRouteParams = {
@@ -25,12 +25,7 @@ export type RegisterRoutesParams = {
 
 @injectable()
 export class RouterRepository {
-  currentRoute: CurrentRoute = {
-    routeId: "root",
-    routeDef: { path: "", isSecure: false },
-    params: {},
-  };
-
+  currentRoute: CurrentRoute =  this.findRoute("homeLink") 
 
   @inject(RouterGateway) routerGateway!: RouterGateway;
 
@@ -46,6 +41,10 @@ export class RouterRepository {
 
     routes.forEach((routeArg: Route) => {
       const route = this.findRoute(routeArg.routeId);
+      if (!route) {
+        console.warn(`Route ${routeArg.routeId} not found`);
+        return;
+      }
       routeConfig[route.routeDef.path] = {
         as: route.routeId,
         uses: () => {
@@ -61,14 +60,13 @@ export class RouterRepository {
     this.routerGateway.registerRoutes(routeConfig);
   }
 
-  findRoute(routeId: string): Route {
-    const route = getRoutes().find((route) => route.routeId === routeId);
-    return (
-      route || {
-        routeId: "loadingSpinner",
-        routeDef: { path: "", isSecure: false },
-      }
-    );
+  findRoute(routeId: string): Route  {
+    const route = getRoutes().find((route) => route.routeId === routeId) 
+    return route ||
+    {
+      routeId: "notFound",
+      routeDef: { path: "/not-found", isSecure: false },
+    }
   }
 
   updateCurrentRoute({ routeId, routeDef, params }: CurrentRoute) {

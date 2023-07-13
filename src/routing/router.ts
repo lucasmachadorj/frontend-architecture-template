@@ -27,6 +27,7 @@ export class Router {
   }: UpdateCurrentRouteParams) {
     const oldRoute = this.routerRepository.findRoute(this.currentRoute.routeId);
     const newRoute = this.routerRepository.findRoute(newRouteId);
+
     const routeChanged = oldRoute.routeId !== newRoute.routeId;
     // verify if has token
     const hasToken = false;
@@ -39,7 +40,6 @@ export class Router {
       newRoute.routeDef.isSecure === false;
 
     if(!routeChanged) return
-
 
     if (protectedOrUnauthenticatedRoute) {
       this.routerRepository.goTo({ routeId: "loginLink" });
