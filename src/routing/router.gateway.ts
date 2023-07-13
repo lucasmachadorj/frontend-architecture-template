@@ -17,8 +17,8 @@ export class RouterGateway {
       this.navigator = BrowserNavigator.create("/");
     }
 
-    this.navigator.on(routeConfig).notFound((path, state) => {
-      console.log("Not found", path, state);
+    this.navigator.on(routeConfig).notFound((path) => {
+      console.log("Not found", path);
     });
   }
 

@@ -1,12 +1,7 @@
-export type State<T = any> = {
-  data: T;
-  title: string;
-};
-
 export type RouteConfig = {
   [path: string]: {
     as: string;
-    uses: (state: any, queryString: string) => void;
+    uses: (queryString: string) => void;
   };
 };
 

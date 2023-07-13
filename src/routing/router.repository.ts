@@ -17,7 +17,6 @@ export type UpdateCurrentRouteParams = {
   routeId: RouteId;
   params: any;
   query: any;
-  state: unknown;
 };
 
 export type RegisterRoutesParams = {
@@ -55,12 +54,11 @@ export class RouterRepository {
       const route = this.findRoute(routeArg.routeId);
       routeConfig[route.routeDef.path] = {
         as: route.routeId,
-        uses: (state: any, queryString: string) => {
+        uses: (queryString: string) => {
           updateCurrentRoute({
             routeId: route.routeId,
             params: route.routeDef,
             query: queryString,
-            state: state,
           });
           if (this.onRouteChanged) {
             this.onRouteChanged();

@@ -1,19 +1,19 @@
-import { PathParams, QueryParams, RouteConfig, State } from "./router.domain";
+import { PathParams, QueryParams, RouteConfig } from "./router.domain";
 import { NavigateParams } from "./router.gateway";
 
 export interface Navigator {
   on(routeConfig: RouteConfig): void;
   goTo({ routeId, params, query }: NavigateParams): void;
-  replace(path: string, state?: unknown): void;
+  replace(path: string): void;
   goBack(): void;
   goForward(): void;
-  navigate(path: string, state?: unknown): void;
+  navigate(path: string): void;
 }
 
 export class BrowserNavigator implements Navigator {
   private history: History;
   private routeConfig: RouteConfig = {};
-  private notFoundHandler?: (path: string, state: any) => void;
+  private notFoundHandler?: (path: string) => void;
 
   private constructor(
     initialPath: string,
@@ -29,26 +29,16 @@ export class BrowserNavigator implements Navigator {
     return new BrowserNavigator(initialPath, query, params);
   }
 
-  navigate(
-    path: string,
-    query?: QueryParams,
-    params?: PathParams,
-    state?: unknown
-  ) {
+  navigate(path: string, query?: QueryParams, params?: PathParams) {
     const search = query ? `?${this.toSearchString(query)}` : "";
     const resolvedPath = params ? this.toPathString(params, path) : path;
-    this.history.pushState(state, "", resolvedPath + search);
+    this.history.pushState(undefined, "", resolvedPath + search);
   }
 
-  replace(
-    path: string,
-    query?: QueryParams,
-    params?: PathParams,
-    state?: State
-  ) {
+  replace(path: string, query?: QueryParams, params?: PathParams) {
     const search = query ? `?${this.toSearchString(query)}` : "";
     const resolvedPath = params ? this.toPathString(params, path) : path;
-    this.history.replaceState(state, "", resolvedPath + search);
+    this.history.replaceState(undefined, "", resolvedPath + search);
   }
 
   goBack() {
@@ -64,7 +54,7 @@ export class BrowserNavigator implements Navigator {
     return this;
   }
 
-  notFound(handler: (path: string, state: any) => void) {
+  notFound(handler: (path: string) => void) {
     this.notFoundHandler = handler;
     return this;
   }
@@ -78,7 +68,7 @@ export class BrowserNavigator implements Navigator {
     });
 
     if (this.notFoundHandler) {
-      this.notFoundHandler(routeId, undefined);
+      this.notFoundHandler(routeId);
       return;
     }
 
@@ -89,13 +79,13 @@ export class BrowserNavigator implements Navigator {
     const path = window.location.pathname;
     const route = this.routeConfig[path];
 
-    if (route && event.state) {
-      route.uses(event.state, event.state.search);
+    if (route) {
+      route.uses(event.state.search);
       return;
     }
 
     if (this.notFoundHandler) {
-      this.notFoundHandler(path, event.state);
+      this.notFoundHandler(path);
     }
   }
 
