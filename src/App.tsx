@@ -1,29 +1,28 @@
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { withInjection } from "./shared/providers/injection";
-import { AppController } from "./app.controller";
 import { Types } from "./shared/providers/identifiers";
 import { renderedComponents } from "./renderedComponents";
+import { Router } from "./routing/router";
 
 interface Props {
-  controller: AppController;
+  router: Router;
 }
 
-export const AppComp = observer(({ controller }: Props) => {
+export const AppComp = observer(({ router }: Props) => {
   useEffect(() => {
-    const onRouteChange = () => {};
-    controller.load(onRouteChange);
+    router.registerRoutes();
   }, []);
 
   return (
     <>
       {renderedComponents().map((route) => {
-        return controller.currentRoute.routeId === route.id && route.component;
+        return router.currentRoute.routeId === route.id && route.component;
       })}
     </>
   );
 });
 
 export const AppComponent = withInjection({
-  controller: Types.AppController,
+  router: Types.Router,
 })(AppComp);

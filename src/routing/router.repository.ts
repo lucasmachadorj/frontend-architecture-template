@@ -10,20 +10,17 @@ export type CurrentRoute = {
   routeId: RouteId;
   routeDef: RouteDef;
   params: any;
-  query: any;
 };
 
 export type UpdateCurrentRouteParams = {
   routeId: RouteId;
   params: any;
-  query: any;
 };
 
 export type RegisterRoutesParams = {
   updateCurrentRoute: (
     updateCurrentRouteParams: UpdateCurrentRouteParams
   ) => void;
-  onRouteChanged: GenericFunction;
 };
 
 @injectable()
@@ -32,7 +29,6 @@ export class RouterRepository {
     routeId: "root",
     routeDef: { path: "", isSecure: false },
     params: {},
-    query: {},
   };
 
   onRouteChanged: GenericFunction = () => {};
@@ -45,8 +41,7 @@ export class RouterRepository {
     });
   }
 
-  registerRoutes({ updateCurrentRoute, onRouteChanged }: RegisterRoutesParams) {
-    this.onRouteChanged = onRouteChanged;
+  registerRoutes({ updateCurrentRoute }: RegisterRoutesParams) {
     let routeConfig: RouteConfig = {};
     const routes = getRoutes();
 
@@ -54,11 +49,10 @@ export class RouterRepository {
       const route = this.findRoute(routeArg.routeId);
       routeConfig[route.routeDef.path] = {
         as: route.routeId,
-        uses: (queryString: string) => {
+        uses: () => {
           updateCurrentRoute({
             routeId: route.routeId,
             params: route.routeDef,
-            query: queryString,
           });
           if (this.onRouteChanged) {
             this.onRouteChanged();
@@ -80,12 +74,11 @@ export class RouterRepository {
     );
   }
 
-  updateCurrentRoute({ routeId, routeDef, params, query }: CurrentRoute) {
+  updateCurrentRoute({ routeId, routeDef, params }: CurrentRoute) {
     this.currentRoute = {
       routeId,
       routeDef,
       params,
-      query,
     };
   }
 

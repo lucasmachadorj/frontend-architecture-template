@@ -1,7 +1,7 @@
 import { Container } from "inversify";
 import { RouterRepository } from "../routing/router.repository";
 import { Types } from "../shared/providers/identifiers";
-import { AppController } from "../app.controller";
+import { Router } from "../routing/router";
 
 export class BaseIOC {
   private container: Container;
@@ -20,8 +20,8 @@ export class BaseIOC {
       .inSingletonScope();
 
     this.container
-      .bind(Types.AppController)
-      .to(AppController)
+      .bind(Types.Router)
+      .to(Router)
       .inSingletonScope();
   }
 

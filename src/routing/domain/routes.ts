@@ -24,14 +24,14 @@ export const getRoutes = (): Route[] => {
     {
       routeId: "loginLink",
       routeDef: {
-        path: "/app/login",
+        path: "/login",
         isSecure: false,
       },
     },
     {
       routeId: "homeLink",
       routeDef: {
-        path: "/app/home",
+        path: "/home",
         isSecure: true,
       },
     },

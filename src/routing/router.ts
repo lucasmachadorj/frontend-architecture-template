@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import {
-  GenericFunction,
   RouterRepository,
   UpdateCurrentRouteParams,
 } from "./router.repository";
@@ -25,12 +24,9 @@ export class Router {
   updateCurrentRoute({
     routeId: newRouteId,
     params,
-    query,
   }: UpdateCurrentRouteParams) {
     const oldRoute = this.routerRepository.findRoute(this.currentRoute.routeId);
     const newRoute = this.routerRepository.findRoute(newRouteId);
-    console.log("oldRoute", oldRoute);
-    console.log("newRoute", newRoute);
     const routeChanged = oldRoute.routeId !== newRoute.routeId;
     // verify if has token
     const hasToken = false;
@@ -57,16 +53,14 @@ export class Router {
           routeId: newRouteId,
           routeDef: newRoute.routeDef,
           params,
-          query,
         });
       }
     }
   }
 
-  registerRoutes(onRouteChanged: GenericFunction) {
+  registerRoutes() {
     this.routerRepository.registerRoutes({
       updateCurrentRoute: this.updateCurrentRoute,
-      onRouteChanged,
     });
   }
 }
