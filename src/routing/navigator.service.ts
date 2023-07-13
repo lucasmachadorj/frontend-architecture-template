@@ -3,7 +3,7 @@ import { NavigateParams } from "./router.gateway";
 
 export interface Navigator {
   on(routeConfig: RouteConfig): void;
-  goTo({ routeId, params, query }: NavigateParams): void;
+  goTo({ routeId, params }: NavigateParams): void;
   replace(path: string): void;
   goBack(): void;
   goForward(): void;
@@ -13,7 +13,6 @@ export interface Navigator {
 export class BrowserNavigator implements Navigator {
   private history: History;
   private routeConfig: RouteConfig = {};
-  private notFoundHandler?: (path: string) => void;
 
   private constructor() {
     this.history = window.history;
@@ -41,18 +40,12 @@ export class BrowserNavigator implements Navigator {
       return;
     }
 
-    if (this.notFoundHandler) {
-      this.notFoundHandler(path);
-      return;
-    }
-
     this.navigate("/");
   }
 
-  replace(path: string, query?: QueryParams, params?: PathParams) {
-    const search = query ? `?${this.toSearchString(query)}` : "";
+  replace(path: string, params?: PathParams) {
     const resolvedPath = params ? this.toPathString(params, path) : path;
-    this.history.replaceState(undefined, "", resolvedPath + search);
+    this.history.replaceState(undefined, "", resolvedPath);
   }
 
   goBack() {
@@ -69,23 +62,13 @@ export class BrowserNavigator implements Navigator {
     return this;
   }
 
-  notFound(handler: (path: string) => void) {
-    this.notFoundHandler = handler;
-    return this;
-  }
-
-  goTo({ routeId, params, query }: NavigateParams) {
+  goTo({ routeId, params }: NavigateParams) {
     Object.keys(this.routeConfig).forEach((path) => {
       if (this.routeConfig[path].as === routeId) {
-        this.navigate(path, query, params);
+        this.navigate(path, params);
         return;
       }
     });
-
-    if (this.notFoundHandler) {
-      this.notFoundHandler(routeId);
-      return;
-    }
 
     this.navigate("/");
   }
@@ -94,14 +77,9 @@ export class BrowserNavigator implements Navigator {
     const path = window.location.pathname;
     const route = this.routeConfig[path];
 
-    if (route) {
-      route.uses(event.state.search);
-      return;
-    }
+    if(!route) return;
 
-    if (this.notFoundHandler) {
-      this.notFoundHandler(path);
-    }
+    route.uses(event.state.search);
   }
 
   private toSearchString = (params: QueryParams): string => {
