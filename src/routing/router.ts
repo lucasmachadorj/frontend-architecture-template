@@ -38,23 +38,22 @@ export class Router {
       (newRoute.routeDef.isSecure && hasToken) ||
       newRoute.routeDef.isSecure === false;
 
-    if (routeChanged) {
-      this.routerRepository.onRouteChanged();
+    if(!routeChanged) return
 
-      if (protectedOrUnauthenticatedRoute) {
-        this.routerRepository.goTo({ routeId: "loginLink" });
-        return;
-      }
 
-      if (publicOrAuthenticatedRoute) {
-        if (oldRoute.onLeave) oldRoute.onLeave();
-        if (newRoute.onEnter) newRoute.onEnter();
-        this.routerRepository.updateCurrentRoute({
-          routeId: newRouteId,
-          routeDef: newRoute.routeDef,
-          params,
-        });
-      }
+    if (protectedOrUnauthenticatedRoute) {
+      this.routerRepository.goTo({ routeId: "loginLink" });
+      return;
+    }
+
+    if (publicOrAuthenticatedRoute) {
+      if (oldRoute.onLeave) oldRoute.onLeave();
+      if (newRoute.onEnter) newRoute.onEnter();
+      this.routerRepository.updateCurrentRoute({
+        routeId: newRouteId,
+        routeDef: newRoute.routeDef,
+        params,
+      });
     }
   }
 

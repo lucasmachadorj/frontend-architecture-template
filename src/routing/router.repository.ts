@@ -31,7 +31,6 @@ export class RouterRepository {
     params: {},
   };
 
-  onRouteChanged: GenericFunction = () => {};
 
   @inject(RouterGateway) routerGateway!: RouterGateway;
 
@@ -54,9 +53,7 @@ export class RouterRepository {
             routeId: route.routeId,
             params: route.routeDef,
           });
-          if (this.onRouteChanged) {
-            this.onRouteChanged();
-          }
+          
         },
       };
     });
