@@ -1,7 +1,4 @@
 import { Container } from "inversify";
-import { RouterRepository } from "../routing/router.repository";
-import { Types } from "../shared/providers/identifiers";
-import { Router } from "../routing/router";
 
 export class BaseIOC {
   private container: Container;
@@ -14,15 +11,7 @@ export class BaseIOC {
   }
 
   buildBaseTemplate(): void {
-    this.container
-      .bind(Types.RouterRepository)
-      .to(RouterRepository)
-      .inSingletonScope();
 
-    this.container
-      .bind(Types.Router)
-      .to(Router)
-      .inSingletonScope();
   }
 
   getContainer(): Container {

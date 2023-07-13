@@ -1,7 +1,4 @@
 import {
-  Component,
-  ComponentType,
-  FC,
   ReactNode,
   createContext,
   memo,

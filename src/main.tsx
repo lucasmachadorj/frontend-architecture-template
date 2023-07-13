@@ -6,6 +6,10 @@ import "./index.css";
 import { configure } from "mobx";
 import { InjectionProvider } from "./shared/providers/injection";
 import { container } from "./infra/app.ioc";
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
 import { AppComponent } from "./App";
 
 configure({
@@ -16,6 +20,13 @@ configure({
   disableErrorBoundaries: false,
 });
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppComponent />,
+  },
+]);
+
 const rootElement = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -23,7 +34,7 @@ const rootElement = ReactDOM.createRoot(
 rootElement.render(
   <React.StrictMode>
     <InjectionProvider container={container}>
-      <AppComponent />
+      <RouterProvider router={router} />
     </InjectionProvider>
   </React.StrictMode>
 );
