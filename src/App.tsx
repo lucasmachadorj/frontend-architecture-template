@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { withInjection } from "./shared/providers/injection";
 import { AppController } from "./app.controller";
 import { Types } from "./shared/providers/identifiers";
+import { renderedComponents } from "./renderedComponents";
 
 interface Props {
   controller: AppController;
@@ -14,7 +15,14 @@ export const AppComp = observer(({ controller }: Props) => {
     controller.load(onRouteChange);
   }, []);
 
-  return <div>App</div>;
+  return (
+    <>
+      {renderedComponents().map((route) => {
+        console.log("route", route, controller.currentRoute.routeId);
+        return controller.currentRoute.routeId === route.id && route.component;
+      })}
+    </>
+  );
 });
 
 export const AppComponent = withInjection({

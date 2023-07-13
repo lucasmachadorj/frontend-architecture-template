@@ -15,11 +15,14 @@ export class BaseIOC {
 
   buildBaseTemplate(): void {
     this.container
-      .bind(RouterRepository)
+      .bind(Types.RouterRepository)
       .to(RouterRepository)
       .inSingletonScope();
 
-    this.container.bind(Types.AppController).to(AppController);
+    this.container
+      .bind(Types.AppController)
+      .to(AppController)
+      .inSingletonScope();
   }
 
   getContainer(): Container {

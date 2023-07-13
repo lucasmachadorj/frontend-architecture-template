@@ -15,24 +15,38 @@ export class BrowserNavigator implements Navigator {
   private routeConfig: RouteConfig = {};
   private notFoundHandler?: (path: string) => void;
 
-  private constructor(
-    initialPath: string,
-    query?: QueryParams,
-    params?: PathParams
-  ) {
+  private constructor() {
     this.history = window.history;
-    this.navigate(initialPath, query, params);
     window.onpopstate = this.handlePopState.bind(this);
   }
 
-  static create(initialPath: string, query?: QueryParams, params?: PathParams) {
-    return new BrowserNavigator(initialPath, query, params);
+  static create() {
+    return new BrowserNavigator();
   }
 
   navigate(path: string, query?: QueryParams, params?: PathParams) {
     const search = query ? `?${this.toSearchString(query)}` : "";
     const resolvedPath = params ? this.toPathString(params, path) : path;
-    this.history.pushState(undefined, "", resolvedPath + search);
+
+    const route = this.routeConfig[path];
+
+    if (!route && path === "/") {
+      throw new Error("Root route not found");
+    }
+
+    if (route) {
+      route.uses(search);
+      this.history.pushState(undefined, "", resolvedPath + search);
+
+      return;
+    }
+
+    if (this.notFoundHandler) {
+      this.notFoundHandler(path);
+      return;
+    }
+
+    this.navigate("/");
   }
 
   replace(path: string, query?: QueryParams, params?: PathParams) {
@@ -51,6 +65,7 @@ export class BrowserNavigator implements Navigator {
 
   on(routeConfig: RouteConfig) {
     this.routeConfig = routeConfig;
+    this.navigateToInitialPath();
     return this;
   }
 
@@ -102,4 +117,9 @@ export class BrowserNavigator implements Navigator {
     }
     return result;
   };
+
+  private navigateToInitialPath() {
+    const initialPath = window.location.pathname;
+    this.navigate(initialPath);
+  }
 }

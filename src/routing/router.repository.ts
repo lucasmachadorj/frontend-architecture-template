@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { NavigateParams, RouterGateway } from "./router.gateway";
 import { makeObservable, observable } from "mobx";
-import { Route, RouteDef, RouteId, getRoutes } from "./routes";
+import { Route, RouteDef, RouteId, getRoutes } from "./domain/routes";
 import { RouteConfig } from "./router.domain";
 
 export type GenericFunction = (...args: any[]) => void;
@@ -29,7 +29,7 @@ export type RegisterRoutesParams = {
 @injectable()
 export class RouterRepository {
   currentRoute: CurrentRoute = {
-    routeId: "loginLink",
+    routeId: "root",
     routeDef: { path: "", isSecure: false },
     params: {},
     query: {},

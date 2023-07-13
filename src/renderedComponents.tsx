@@ -6,5 +6,9 @@ export const renderedComponents = () => {
       id: "homeLink",
       component: <HomeComponent key="homePage" />,
     },
+    {
+      id: "root",
+      component: <HomeComponent key="homePage" />,
+    },
   ];
 };

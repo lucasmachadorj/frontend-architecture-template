@@ -1,4 +1,4 @@
-export type RouteId = "loginLink" | "homeLink" | "loadingSpinner";
+export type RouteId = "root" | "loginLink" | "homeLink" | "loadingSpinner";
 
 export type RouteDef = {
   path: string;
@@ -14,6 +14,13 @@ export type Route = {
 
 export const getRoutes = (): Route[] => {
   return [
+    {
+      routeId: "root",
+      routeDef: {
+        path: "/",
+        isSecure: false,
+      },
+    },
     {
       routeId: "loginLink",
       routeDef: {

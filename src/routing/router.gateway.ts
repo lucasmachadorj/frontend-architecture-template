@@ -14,7 +14,7 @@ export class RouterGateway {
 
   async registerRoutes(routeConfig: RouteConfig) {
     if (!this.navigator) {
-      this.navigator = BrowserNavigator.create("/");
+      this.navigator = BrowserNavigator.create();
     }
 
     this.navigator.on(routeConfig).notFound((path) => {
