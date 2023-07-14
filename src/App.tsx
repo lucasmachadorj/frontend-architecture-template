@@ -1,15 +1,11 @@
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
-import { withInjection } from "./shared/providers/injection";
-
-
+import { withInjection } from "./infra/injection";
 
 export const AppComp = observer(() => {
-
-
   return (
     <>
-    <div>Hi</div>
+      <div>Hi</div>
     </>
   );
 });

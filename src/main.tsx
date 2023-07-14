@@ -4,12 +4,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { configure } from "mobx";
-import { InjectionProvider } from "./shared/providers/injection";
+import { InjectionProvider } from "./infra/injection";
 import { container } from "./infra/app.ioc";
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppComponent } from "./App";
 
 configure({

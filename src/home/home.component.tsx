@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import { withInjection } from "../shared/providers/injection";
+import { withInjection } from "../infra/injection";
 
 type Props = {};
 
