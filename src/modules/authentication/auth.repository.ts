@@ -1,9 +1,7 @@
-import { inject, injectable } from "inversify";
 import { AuthGateway } from "./auth.gateway";
 
-@injectable()
 export class AuthRepository {
-  @inject(AuthGateway) private authGateway!: AuthGateway;
+  constructor(private authGateway: AuthGateway) {}
 
   async login() {
     const user = await this.authGateway.getUser();
@@ -28,7 +26,7 @@ export class AuthRepository {
     await this.authGateway.removeTokens();
   }
 
-  getUser() {
-    return "getUser";
+  async getUser() {
+    return await this.authGateway.getUser();
   }
 }

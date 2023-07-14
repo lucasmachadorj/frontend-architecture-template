@@ -1,37 +1,16 @@
-import "reflect-metadata";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import { configure } from "mobx";
-import { InjectionProvider } from "./infra/injection";
-import { container } from "./infra/app.ioc";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AppComponent } from "./App";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { routes } from "./routes";
 
-configure({
-  enforceActions: "never",
-  computedRequiresReaction: false,
-  reactionRequiresObservable: false,
-  observableRequiresReaction: false,
-  disableErrorBoundaries: false,
-});
+const rootContainer = document.querySelector("#root")!;
+const router = createBrowserRouter(routes);
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <AppComponent />,
-  },
-]);
+const root = createRoot(rootContainer);
 
-const rootElement = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-
-rootElement.render(
-  <React.StrictMode>
-    <InjectionProvider container={container}>
-      <RouterProvider router={router} />
-    </InjectionProvider>
-  </React.StrictMode>
+root.render(
+  <StrictMode>
+    <RouterProvider router={router}></RouterProvider>
+  </StrictMode>
 );

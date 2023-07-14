@@ -1,9 +1,7 @@
-import { injectable, inject } from "inversify";
 import { AuthRepository } from "./auth.repository";
 
-@injectable()
 export class AuthController {
-  @inject(AuthRepository) private authRepository!: AuthRepository;
+  constructor(private authRepository: AuthRepository) {}
 
   async login() {
     const user = await this.authRepository.login();
