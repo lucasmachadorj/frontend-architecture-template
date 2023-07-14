@@ -1,7 +1,7 @@
 import { RouteObject, redirect } from "react-router-dom";
 import { AuthController, AuthPresenter } from "./modules/authentication";
 import compositionRoot from "./bootstrap/compositionRoot";
-import { HomePage } from "./pages";
+import { BooksPage, HomePage } from "./pages";
 
 class RoutesMapper {
   constructor(
@@ -55,6 +55,14 @@ class RoutesMapper {
           } finally {
             return redirect("/");
           }
+        },
+      },
+      {
+        path: "/books",
+        Component: BooksPage,
+        loader: async () => {
+          await this.protectedRouteHandler("/books");
+          return null;
         },
       },
     ];
