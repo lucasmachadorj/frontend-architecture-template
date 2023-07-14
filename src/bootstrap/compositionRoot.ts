@@ -31,3 +31,7 @@ export class CompositionRoot {
     return this.authPresenter;
   }
 }
+
+const compositionRoot = new CompositionRoot();
+
+export default compositionRoot;

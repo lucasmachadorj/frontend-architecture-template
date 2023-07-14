@@ -6,4 +6,9 @@ export class AuthPresenter {
   async getUser() {
     return await this.authRepository.getUser();
   }
+
+  async isLoggedIn() {
+    const user = await this.authRepository.getUser();
+    return !!user && !user.expired;
+  }
 }

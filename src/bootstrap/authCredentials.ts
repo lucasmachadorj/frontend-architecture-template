@@ -11,6 +11,7 @@ export const credentials: UserManagerSettings = {
   response_mode: "query",
   includeIdTokenInSilentRenew: true,
   redirect_uri: `${location.origin}/signed-in`,
+
   metadataSeed: {
     end_session_endpoint: `${authority}/v2/logout?client_id=${authClientId}&returnTo=${location.origin}/signed-out`,
   },

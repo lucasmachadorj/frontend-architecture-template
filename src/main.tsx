@@ -2,10 +2,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { routes } from "./routes";
+import routesMapper from "./routes";
 
 const rootContainer = document.querySelector("#root")!;
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(routesMapper.getRoutes());
 
 const root = createRoot(rootContainer);
 
