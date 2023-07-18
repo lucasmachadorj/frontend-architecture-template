@@ -1,6 +1,5 @@
 import { UserManagerSettings, WebStorageStateStore } from "oidc-client-ts";
-import { authClientId, authClientSecret } from "./config";
-import { authority } from "./config";
+import { authClientId, authClientSecret, authority } from "./config";
 
 export const credentials: UserManagerSettings = {
   authority,
