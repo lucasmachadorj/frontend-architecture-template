@@ -12,6 +12,11 @@ import {
   BooksRepository,
 } from "../modules/books";
 import { GraphQLApolloGateway } from "../modules/shared/gateways/graphql-apollo.gateway";
+import {
+  ApolloClient,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
 
 export class CompositionRoot {
   private authController: AuthController;
@@ -26,6 +31,8 @@ export class CompositionRoot {
 
   private graphqlApolloGateway: GraphQLApolloGateway;
 
+  private apolloClient: ApolloClient<NormalizedCacheObject>;
+
   constructor() {
     this.userManager = new UserManager(credentials);
     this.authGateway = new AuthGateway(this.userManager);
@@ -33,16 +40,32 @@ export class CompositionRoot {
     this.authPresenter = new AuthPresenter(this.authRepository);
     this.authController = new AuthController(this.authRepository);
 
-    this.graphqlApolloGateway = new GraphQLApolloGateway();
+    this.apolloClient = new ApolloClient({
+      uri: "http://localhost:4000",
+      cache: new InMemoryCache(),
+    });
+
+    this.graphqlApolloGateway = new GraphQLApolloGateway(this.apolloClient);
     this.booksRepository = new BooksRepository(this.graphqlApolloGateway);
+    this.booksPresenter = new BooksPresenter(this.booksRepository);
+    this.booksController = new BooksController(this.booksRepository);
   }
 
-  public getAuthController(): AuthController {
-    return this.authController;
+  public getAuthHandlers() {
+    return {
+      controller: this.authController,
+      presenter: this.authPresenter,
+    };
   }
 
-  public getAuthPresenter(): AuthPresenter {
-    return this.authPresenter;
+  public getBooksHandlers(): {
+    controller: BooksController;
+    presenter: BooksPresenter;
+  } {
+    return {
+      controller: this.booksController,
+      presenter: this.booksPresenter,
+    };
   }
 }
 

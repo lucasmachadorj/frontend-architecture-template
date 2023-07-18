@@ -70,8 +70,8 @@ class RoutesMapper {
 }
 
 const routesMapper = new RoutesMapper(
-  compositionRoot.getAuthController(),
-  compositionRoot.getAuthPresenter()
+  compositionRoot.getAuthHandlers().controller,
+  compositionRoot.getAuthHandlers().presenter
 );
 
 export default routesMapper;

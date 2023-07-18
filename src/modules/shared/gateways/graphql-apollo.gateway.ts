@@ -1,4 +1,5 @@
 import {
+  ApolloCache,
   ApolloClient,
   DocumentNode,
   NormalizedCacheObject,
@@ -21,16 +22,45 @@ export class GraphQLApolloGateway {
     });
   }
 
-  async mutate<T = any>(
+  async mutate<M extends object, Q extends object>(
     mutation: DocumentNode,
-    variables?: OperationVariables
-  ): Promise<T | null | undefined> {
-    return this.apolloClient
-      .mutate<T>({
+    variables?: OperationVariables,
+    updateCache?: {
+      query: DocumentNode;
+      fieldName: keyof Q;
+    }
+  ): Promise<void> {
+    this.apolloClient
+      .mutate<M>({
         mutation,
         variables,
+        update: (cache: ApolloCache<any>, { data }: any) => {
+          if (!updateCache) return;
+          const currentData = cache.readQuery<Q>({ query: updateCache.query });
+          let updatedData: Record<string, any>;
+
+          const dataToBeCached = Object.values(data)[0];
+
+          if (!currentData) {
+            updatedData = {
+              [updateCache.fieldName]: [dataToBeCached],
+            };
+            cache.writeQuery({ query: updateCache.query, data: updatedData });
+            return;
+          }
+
+          updatedData = {
+            [updateCache.fieldName]: [
+              ...currentData[updateCache.fieldName],
+              dataToBeCached,
+            ],
+          };
+          cache.writeQuery({ query: updateCache.query, data: updatedData });
+        },
       })
-      .then((result) => result.data);
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   watchedQuery<T = any>(

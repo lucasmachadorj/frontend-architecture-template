@@ -3,19 +3,19 @@ import { AuthRepository } from "./auth.repository";
 export class AuthController {
   constructor(private authRepository: AuthRepository) {}
 
-  async login() {
-    const user = await this.authRepository.login();
-  }
+  login = async () => {
+    await this.authRepository.login();
+  };
 
-  async logout() {
+  logout = async () => {
     await this.authRepository.logout();
-  }
+  };
 
-  async requestTokens() {
+  requestTokens = async () => {
     await this.authRepository.requestTokens();
-  }
+  };
 
-  async removeTokens() {
+  removeTokens = async () => {
     await this.authRepository.removeTokens();
-  }
+  };
 }

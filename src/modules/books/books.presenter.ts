@@ -13,10 +13,10 @@ export class BooksPresenter {
 
   constructor(private booksRepository: BooksRepository) {
     makeAutoObservable(this);
-    this.reset();
+    this.subscribeToBooks();
   }
 
-  subscribeToBooks() {
+  private subscribeToBooks() {
     return this.booksRepository.watchBooks({
       next: this.reload.bind(this),
       error: (error) => {
@@ -25,8 +25,8 @@ export class BooksPresenter {
     });
   }
 
-  private reset() {
-    this.books = [];
+  getBooks() {
+    return this.books;
   }
 
   private reload({ data }: ApolloQueryResult<BooksDTO>) {

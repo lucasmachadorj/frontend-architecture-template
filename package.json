@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fake-server": "ts-node --project tsconfig.node.json --esm  fake-server/index.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
+    "apollo-server": "^3.12.0",
     "inversify": "^6.0.1",
     "mobx": "^6.9.1",
     "mobx-react": "^9.0.0",
@@ -18,7 +20,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.1",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/node": "^20.4.1",
